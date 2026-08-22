@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tropical-management
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ditasetyakurniawan-droid/tropical-management-gitops.git
+    targetRevision: main
+    path: apps/tropical-management/overlays/test-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: test-app
+  syncPolicy:
+    syncOptions:
+      - Prune=false
+      - ApplyOutOfSyncOnly=true

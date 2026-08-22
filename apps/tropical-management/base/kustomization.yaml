@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - serviceaccount.yaml
   - runtime-config.yaml
-  - secret.yaml
   - ingress.yaml
 
     # workloads
