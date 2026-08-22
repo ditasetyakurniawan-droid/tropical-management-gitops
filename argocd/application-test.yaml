@@ -13,6 +13,10 @@ spec:
     server: https://kubernetes.default.svc
     namespace: test-app
   syncPolicy:
+    automated:
+      enabled: true
+      prune: false
+      selfHeal: true
     syncOptions:
       - Prune=false
       - ApplyOutOfSyncOnly=true
