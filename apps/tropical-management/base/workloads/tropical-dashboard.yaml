@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-dashboard
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-dashboard
+  template:
+    metadata:
+      labels:
+        app: tropical-dashboard
+    spec:
+      serviceAccountName: tropical-management
+      containers:
+      - name: tropical-dashboard
+        image: harbor-dt.co.id/devops-apps/tropical-dashboard:v1
+        ports:
+        - containerPort: 8080
+
+        env:
+        - name: SALES_SERVICE_URL
+          value: http://tropical-sales:8080
+        - name: AUDIT_SERVICE_URL
+          value: http://tropical-audit:8080
+        - name: INVENTORY_SERVICE_URL
+          value: http://tropical-inventory:8080

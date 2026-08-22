@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tropical-dashboard
+spec:
+  selector:
+    app: tropical-dashboard
+  ports:
+  - port: 8080

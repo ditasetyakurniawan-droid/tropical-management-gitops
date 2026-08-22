@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-auth
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-auth
+  template:
+    metadata:
+      labels:
+        app: tropical-auth
+    spec:
+      serviceAccountName: tropical-management
+
+      containers:
+        - name: tropical-auth
+          image: harbor-dt.co.id/devops-apps/tropical-auth:v1
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            
+          env:
+            - name: AUTH_DB_DSN
+              value: tropical:tropical@tcp(192.168.100.70:3306)/tropical_auth?parseTime=true&charset=utf8mb4
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: tropical-secret
+                  key: JWT_SECRET
+            - name: BOOTSTRAP_ADMIN_EMAIL
+              value: admin@tropical.local
+            - name: BOOTSTRAP_ADMIN_PASSWORD
+              value: ChangeThis123!

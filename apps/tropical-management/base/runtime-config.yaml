@@ -3,8 +3,8 @@ kind: ConfigMap
 metadata:
   name: tropical-runtime-config
 data:
-  AUTH_SERVICE_URL: http://auth-service:8080
-  AUDIT_SERVICE_URL: http://audit-service:8080
-  INVENTORY_SERVICE_URL: http://inventory-service:8080
-  SALES_SERVICE_URL: http://sales-service:8080
-  DASHBOARD_SERVICE_URL: http://dashboard-service:8080
+  AUTH_SERVICE_URL: http://tropical-auth:8080
+  AUDIT_SERVICE_URL: http://tropical-audit:8080
+  INVENTORY_SERVICE_URL: http://tropical-inventory:8080
+  SALES_SERVICE_URL: http://tropical-sales:8080
+  DASHBOARD_SERVICE_URL: http://tropical-dashboard:8080

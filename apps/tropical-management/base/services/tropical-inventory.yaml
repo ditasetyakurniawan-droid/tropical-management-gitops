@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tropical-inventory
+spec:
+  selector:
+    app: tropical-inventory
+  ports:
+  - port: 8080

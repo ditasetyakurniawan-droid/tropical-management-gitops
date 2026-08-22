@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-sales
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-sales
+  template:
+    metadata:
+      labels:
+        app: tropical-sales
+    spec:
+      serviceAccountName: tropical-management
+      containers:
+      - name: tropical-sales
+        image: harbor-dt.co.id/devops-apps/tropical-sales:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SALES_DB_DSN
+          value: tropical:tropical@tcp(192.168.100.70:3306)/tropical_sales?parseTime=true&charset=utf8mb4

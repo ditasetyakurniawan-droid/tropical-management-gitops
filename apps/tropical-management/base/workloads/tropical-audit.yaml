@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-audit
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-audit
+  template:
+    metadata:
+      labels:
+        app: tropical-audit
+
+    spec:
+      serviceAccountName: tropical-management
+      containers:
+      - name: tropical-audit
+        image: harbor-dt.co.id/devops-apps/tropical-audit:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: AUDIT_DB_DSN
+          value: tropical:tropical@tcp(192.168.100.70:3306)/tropical_audit?parseTime=true&charset=utf8mb4

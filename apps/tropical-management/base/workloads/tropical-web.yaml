@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-web
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-web
+  template:
+    metadata:
+      labels:
+        app: tropical-web
+    spec:
+      serviceAccountName: tropical-management
+      containers:
+      - name: tropical-web
+        image: harbor-dt.co.id/devops-apps/tropical-web:v5
+        ports:
+        - containerPort: 3000

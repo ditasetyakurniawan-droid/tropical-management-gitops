@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: tropical-api-gateway
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-api-gateway
+  template:
+    metadata:
+      labels:
+        app: tropical-api-gateway
+    spec:
+      serviceAccountName: tropical-management
+
+      containers:
+        - name: tropical-api-gateway
+          image: harbor-dt.co.id/devops-apps/tropical-api-gateway:v1
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: tropical-secret
+                  key: JWT_SECRET
+            - name: AUTH_SERVICE_URL
+              value: http://tropical-auth:8080
+            - name: AUDIT_SERVICE_URL
+              value: http://tropical-audit:8080
+            - name: INVENTORY_SERVICE_URL
+              value: http://tropical-inventory:8080
+            - name: SALES_SERVICE_URL
+              value: http://tropical-sales:8080
+            - name: DASHBOARD_SERVICE_URL
+              value: http://tropical-dashboard:8080
+            - name: CHAT_SERVICE_URL
+              value: http://tropical-chat:8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-inventory
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-inventory
+  template:
+    metadata:
+      labels:
+        app: tropical-inventory
+    spec:
+      serviceAccountName: tropical-management
+      containers:
+      - name: tropical-inventory
+        image: harbor-dt.co.id/devops-apps/tropical-inventory:v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: INVENTORY_DB_DSN
+          value: tropical:tropical@tcp(192.168.100.70:3306)/tropical_inventory?parseTime=true&charset=utf8mb4

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-chat
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tropical-chat
+  template:
+    metadata:
+      labels:
+        app: tropical-chat
+    spec:
+      serviceAccountName: tropical-management
+      containers:
+      - name: tropical-chat
+        image: harbor-dt.co.id/devops-apps/tropical-chat:v1
+        ports:
+        - containerPort: 8080
+
+        env:
+        - name: CHAT_DB_DSN
+          value: tropical:tropical@tcp(192.168.100.70:3306)/tropical_auth?parseTime=true&charset=utf8mb4
