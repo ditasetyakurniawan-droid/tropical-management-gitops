@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-inventory
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "app-tropical-management-test"
+        vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
+        vault.hashicorp.com/tls-secret: "vault-ca"
+        vault.hashicorp.com/tls-server-name: "vault.vault.svc"
+        vault.hashicorp.com/agent-service-account-token-volume-name: "vault-token"
+
+        vault.hashicorp.com/agent-inject-secret-inventory-db: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-inventory-db: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "INVENTORY_DB_DSN" -}}
+          {{- end }}
+
+    spec:
+      serviceAccountName: tropical-management
+
+      volumes:
+        - name: vault-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: token
+                  audience: vault
+                  expirationSeconds: 3600
+
+      containers:
+        - name: tropical-inventory
+          image: harbor-dt.co.id/devops-apps/tropical-inventory:f77d00fd9ecd
+
+          env:
+            - name: INVENTORY_DB_DSN_FILE
+              value: /vault/secrets/inventory-db
+
+          volumeMounts:
+            - name: vault-token
+              mountPath: /var/run/secrets/vault
+              readOnly: true

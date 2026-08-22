@@ -9,5 +9,9 @@ commonLabels:
   environment: test
 
 patchesStrategicMerge:
+  - tropical-chat-vault.yaml
+  - tropical-sales-vault.yaml
+  - tropical-inventory-vault.yaml
+  - tropical-audit-vault.yaml
   - tropical-api-gateway-vault.yaml
   - tropical-auth-vault.yaml
