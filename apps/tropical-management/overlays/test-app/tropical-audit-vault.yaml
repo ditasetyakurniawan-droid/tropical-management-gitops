@@ -36,6 +36,8 @@ spec:
           image: harbor-dt.co.id/devops-apps/tropical-audit:f77d00fd9ecd
 
           env:
+            - name: AUDIT_DB_DSN
+              $patch: delete
             - name: AUDIT_DB_DSN_FILE
               value: /vault/secrets/audit-db
 

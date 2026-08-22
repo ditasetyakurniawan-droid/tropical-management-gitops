@@ -36,6 +36,8 @@ spec:
           image: harbor-dt.co.id/devops-apps/tropical-inventory:f77d00fd9ecd
 
           env:
+            - name: INVENTORY_DB_DSN
+              $patch: delete
             - name: INVENTORY_DB_DSN_FILE
               value: /vault/secrets/inventory-db
 

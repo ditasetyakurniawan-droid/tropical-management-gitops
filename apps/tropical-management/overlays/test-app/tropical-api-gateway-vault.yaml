@@ -36,6 +36,8 @@ spec:
           image: harbor-dt.co.id/devops-apps/tropical-api-gateway:f77d00fd9ecd
 
           env:
+            - name: JWT_SECRET
+              $patch: delete
             - name: JWT_SECRET_FILE
               value: /vault/secrets/jwt
 

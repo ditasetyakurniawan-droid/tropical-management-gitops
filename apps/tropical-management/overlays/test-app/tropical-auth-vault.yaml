@@ -54,6 +54,14 @@ spec:
           image: harbor-dt.co.id/devops-apps/tropical-auth:f77d00fd9ecd
 
           env:
+            - name: AUTH_DB_DSN
+              $patch: delete
+            - name: JWT_SECRET
+              $patch: delete
+            - name: BOOTSTRAP_ADMIN_EMAIL
+              $patch: delete
+            - name: BOOTSTRAP_ADMIN_PASSWORD
+              $patch: delete
             - name: AUTH_DB_DSN_FILE
               value: /vault/secrets/auth-db
             - name: JWT_SECRET_FILE
