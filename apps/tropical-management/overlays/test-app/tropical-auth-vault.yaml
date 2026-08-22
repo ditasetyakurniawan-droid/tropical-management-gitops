@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-auth
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "app-tropical-management-test"
+        vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
+        vault.hashicorp.com/tls-secret: "vault-ca"
+        vault.hashicorp.com/tls-server-name: "vault.vault.svc"
+        vault.hashicorp.com/agent-service-account-token-volume-name: "vault-token"
+
+        vault.hashicorp.com/agent-inject-secret-auth-db: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-auth-db: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "AUTH_DB_DSN" -}}
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-jwt: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-jwt: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "JWT_SECRET" -}}
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-admin-email: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-admin-email: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "BOOTSTRAP_ADMIN_EMAIL" -}}
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-admin-password: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-admin-password: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "BOOTSTRAP_ADMIN_PASSWORD" -}}
+          {{- end }}
+
+    spec:
+      serviceAccountName: tropical-management
+
+      volumes:
+        - name: vault-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: token
+                  audience: vault
+                  expirationSeconds: 3600
+
+      containers:
+        - name: tropical-auth
+          image: harbor-dt.co.id/devops-apps/tropical-auth:f77d00fd9ecd
+
+          env:
+            - name: AUTH_DB_DSN_FILE
+              value: /vault/secrets/auth-db
+            - name: JWT_SECRET_FILE
+              value: /vault/secrets/jwt
+            - name: BOOTSTRAP_ADMIN_EMAIL_FILE
+              value: /vault/secrets/admin-email
+            - name: BOOTSTRAP_ADMIN_PASSWORD_FILE
+              value: /vault/secrets/admin-password
+
+          volumeMounts:
+            - name: vault-token
+              mountPath: /var/run/secrets/vault
+              readOnly: true

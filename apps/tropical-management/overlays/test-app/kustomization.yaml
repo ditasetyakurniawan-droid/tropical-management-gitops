@@ -7,3 +7,6 @@ resources:
 commonLabels:
   app.kubernetes.io/part-of: tropical-management
   environment: test
+
+patchesStrategicMerge:
+  - tropical-auth-vault.yaml
