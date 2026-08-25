@@ -15,7 +15,6 @@ patchesStrategicMerge:
   - tropical-audit-vault.yaml
   - tropical-api-gateway-vault.yaml
   - tropical-auth-vault.yaml
-  - tropical-web-image.yaml
 
 images:
   - name: harbor-dt.co.id/devops-apps/tropical-auth

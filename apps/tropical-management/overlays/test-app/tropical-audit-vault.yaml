@@ -33,7 +33,6 @@ spec:
 
       containers:
         - name: tropical-audit
-
           env:
             - name: AUDIT_DB_DSN
               $patch: delete

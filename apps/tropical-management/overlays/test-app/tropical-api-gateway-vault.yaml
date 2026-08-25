@@ -33,7 +33,6 @@ spec:
 
       containers:
         - name: tropical-api-gateway
-
           env:
             - name: JWT_SECRET
               $patch: delete
