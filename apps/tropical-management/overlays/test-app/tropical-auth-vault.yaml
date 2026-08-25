@@ -51,7 +51,6 @@ spec:
 
       containers:
         - name: tropical-auth
-          image: harbor-dt.co.id/devops-apps/tropical-auth:0687ae33e513
 
           env:
             - name: AUTH_DB_DSN

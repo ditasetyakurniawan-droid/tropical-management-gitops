@@ -16,3 +16,21 @@ patchesStrategicMerge:
   - tropical-api-gateway-vault.yaml
   - tropical-auth-vault.yaml
   - tropical-web-image.yaml
+
+images:
+  - name: harbor-dt.co.id/devops-apps/tropical-auth
+    newTag: 1.0.0-beta1
+  - name: harbor-dt.co.id/devops-apps/tropical-audit
+    newTag: 1.0.0-beta1
+  - name: harbor-dt.co.id/devops-apps/tropical-inventory
+    newTag: 1.0.0-beta1
+  - name: harbor-dt.co.id/devops-apps/tropical-sales
+    newTag: 1.0.0-beta1
+  - name: harbor-dt.co.id/devops-apps/tropical-chat
+    newTag: 1.0.0-beta1
+  - name: harbor-dt.co.id/devops-apps/tropical-dashboard
+    newTag: 1.0.0-beta1
+  - name: harbor-dt.co.id/devops-apps/tropical-api-gateway
+    newTag: 1.0.0-beta1
+  - name: harbor-dt.co.id/devops-apps/tropical-web
+    newTag: 1.0.0-beta1

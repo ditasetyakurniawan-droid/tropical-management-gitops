@@ -33,7 +33,6 @@ spec:
 
       containers:
         - name: tropical-chat
-          image: harbor-dt.co.id/devops-apps/tropical-chat:f77d00fd9ecd
 
           env:
             - name: CHAT_DB_DSN

@@ -33,7 +33,6 @@ spec:
 
       containers:
         - name: tropical-inventory
-          image: harbor-dt.co.id/devops-apps/tropical-inventory:f77d00fd9ecd
 
           env:
             - name: INVENTORY_DB_DSN

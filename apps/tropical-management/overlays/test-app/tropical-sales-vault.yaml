@@ -33,7 +33,6 @@ spec:
 
       containers:
         - name: tropical-sales
-          image: harbor-dt.co.id/devops-apps/tropical-sales:f77d00fd9ecd
 
           env:
             - name: SALES_DB_DSN
