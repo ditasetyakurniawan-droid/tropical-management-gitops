@@ -7,9 +7,13 @@ The application is split into:
 - Application repository: `tropical-management-v1`
 - GitOps repository: `tropical-management-gitops`
 
-Delivery flow:
+Current delivery flow:
 
-Developer -> Git commit -> Jenkins -> Docker image -> Harbor -> GitOps image tag update -> Argo CD reconciliation -> Kubernetes.
+```text
+Developer -> Git commit/merge -> Jenkins -> Sonar/tests -> Harbor -> GitOps image tag update -> Argo CD -> PreSync DB migration -> Kubernetes rollout
+```
+
+Application runtime pods do not own schema migration during startup. Database schema changes are executed by the standalone `tropical-db-migrator` before rollout.
 
 ## Current Feature Status
 
@@ -42,41 +46,68 @@ API Gateway verifies JWT and forwards:
 
 The chat service never trusts browser submitted identity data.
 
+Current database ownership:
+
+```text
+chat-service -> tropical_chat
+```
+
+The previous shared-schema arrangement with `tropical_auth` has been retired. Migration metadata is maintained independently in `tropical_chat.schema_migrations`.
+
 ## Local Development
 
-Start services:
+Existing local environments with already initialized database volumes may still start with:
 
 ```bash
 docker compose up -d
 ```
 
-Validate:
+However, after P0.2 the runtime services no longer execute schema DDL during startup. A **fresh** Docker Compose environment must not rely on service startup migrations.
 
-```bash
-docker compose ps
+P0.2.1 remains open to make local bootstrap match Kubernetes:
+
+```text
+MySQL ready
+  -> standalone db-migrator
+  -> schema ready
+  -> application services
 ```
 
-Open:
+Until that parity work is complete, do not treat `docker compose up -d` against an empty database volume as the production-equivalent bootstrap path.
 
-```
-http://localhost:3000/chat
-```
+## Deployment Status and Remaining Work
 
-## Future Production Checklist
+Implemented:
 
-- Add Vault Agent secret file injection
-- Add Kubernetes Deployment for chat-service
-- Add Service and Ingress routing
-- Enable Argo CD automated synchronization after validation
-- Add HPA, PDB, and NetworkPolicy
+- Kubernetes Deployment/Service for `chat-service`
+- Vault Agent secret-file injection
+- Harbor immutable image delivery
+- Jenkins GitOps image-tag update
+- Argo CD automated synchronization
+- `/livez` and `/readyz` probes
+- graceful shutdown
+- versioned PreSync database migration
+- fail-closed migration behavior
+
+Remaining platform hardening:
+
+- measured CPU/memory requests and limits
+- replica/rolling-update strategy
+- PodDisruptionBudget for eligible workloads
+- HPA after resource requests and metrics are reliable
+- NetworkPolicy and RBAC review
+- ingress/TLS lifecycle hardening
+- shared pub/sub such as Redis or NATS before horizontally scaling `chat-service`
 
 ## Development Rule
 
 Every new service must include:
 
 - Dockerfile
-- health endpoint
-- environment documentation
+- `/livez` and `/readyz` health contract
+- environment and secret-file documentation
 - Kubernetes manifest
 - GitOps overlay update
-- README update
+- migration impact assessment
+- observability and rollback notes
+- README/documentation update
