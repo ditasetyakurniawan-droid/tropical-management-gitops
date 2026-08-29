@@ -104,3 +104,10 @@ See [`docs/delivery-flow.md`](docs/delivery-flow.md) and [`docs/operations-runbo
 - ELK application integration/central observability: **not yet complete**.
 
 See [`docs/next-steps.md`](docs/next-steps.md).
+
+## Deployment Tracking
+
+Current deployment state and release history:
+
+- [Deployment Status](docs/DEPLOYMENT_STATUS.md)
+- [Release 1.1 Workforce GitOps](docs/release-1.1-workforce-gitops.md)
