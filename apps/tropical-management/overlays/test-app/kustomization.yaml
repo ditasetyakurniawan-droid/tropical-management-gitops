@@ -28,20 +28,20 @@ patchesStrategicMerge:
 
 images:
   - name: harbor-dt.co.id/devops-apps/tropical-auth
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-audit
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-inventory
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-sales
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-chat
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-dashboard
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-api-gateway
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-web
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
   - name: harbor-dt.co.id/devops-apps/tropical-db-migrator
-    newTag: 1.0.0-beta2-9cc38a29ca2c
+    newTag: 1.0.0-beta2-bbd05967bc38
