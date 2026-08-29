@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: test-app
 resources:
   - ../../base
+  - limit-range.yaml
 
 commonLabels:
   app.kubernetes.io/part-of: tropical-management
@@ -16,6 +17,14 @@ patchesStrategicMerge:
   - tropical-api-gateway-vault.yaml
   - tropical-auth-vault.yaml
   - tropical-db-migrator-vault.yaml
+  - runtime/tropical-api-gateway.yaml
+  - runtime/tropical-auth.yaml
+  - runtime/tropical-audit.yaml
+  - runtime/tropical-inventory.yaml
+  - runtime/tropical-sales.yaml
+  - runtime/tropical-chat.yaml
+  - runtime/tropical-dashboard.yaml
+  - runtime/tropical-web.yaml
 
 images:
   - name: harbor-dt.co.id/devops-apps/tropical-auth

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tropical-audit
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-requests-cpu: "25m"
+        vault.hashicorp.com/agent-requests-mem: "64Mi"
+        vault.hashicorp.com/agent-limits-cpu: "250m"
+        vault.hashicorp.com/agent-limits-mem: "128Mi"
+    spec:
+      containers:
+        - name: tropical-audit
+          env:
+            - name: APP_ENV
+              value: test-app
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 300m
+              memory: 192Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
