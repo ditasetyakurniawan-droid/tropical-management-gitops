@@ -30,22 +30,22 @@ patchesStrategicMerge:
 
 images:
   - name: harbor-dt.co.id/devops-apps/tropical-auth
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-audit
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-inventory
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-workforce
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-sales
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-chat
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-dashboard
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-api-gateway
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-web
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
   - name: harbor-dt.co.id/devops-apps/tropical-db-migrator
-    newTag: 1.1.0-beta1-ed910abda3bd
+    newTag: 1.1.0-beta1-858fe7452e8e
