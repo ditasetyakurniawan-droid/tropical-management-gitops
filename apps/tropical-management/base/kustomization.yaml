@@ -15,6 +15,9 @@ resources:
   - workloads/tropical-chat.yaml
   - workloads/tropical-web.yaml
 
+  # database migration hook
+  - jobs/tropical-db-migrator.yaml
+
   # services
   - services/tropical-api-gateway.yaml
   - services/tropical-auth.yaml
