@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tropical-db-migrator
+spec:
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-pre-populate-only: "true"
+        vault.hashicorp.com/role: "app-tropical-management-test"
+        vault.hashicorp.com/ca-cert: "/vault/tls/ca.crt"
+        vault.hashicorp.com/tls-secret: "vault-ca"
+        vault.hashicorp.com/tls-server-name: "vault.vault.svc"
+        vault.hashicorp.com/agent-service-account-token-volume-name: "vault-token"
+
+        vault.hashicorp.com/agent-inject-secret-auth-db: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-auth-db: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "AUTH_DB_DSN" -}}
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-audit-db: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-audit-db: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "AUDIT_DB_DSN" -}}
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-inventory-db: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-inventory-db: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "INVENTORY_DB_DSN" -}}
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-sales-db: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-sales-db: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "SALES_DB_DSN" -}}
+          {{- end }}
+
+        vault.hashicorp.com/agent-inject-secret-chat-db: "kv/data/apps/tropical-management/test/application"
+        vault.hashicorp.com/agent-inject-template-chat-db: |
+          {{- with secret "kv/data/apps/tropical-management/test/application" -}}
+          {{- index .Data.data "CHAT_DB_DSN" -}}
+          {{- end }}
+    spec:
+      serviceAccountName: tropical-management
+      volumes:
+        - name: vault-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  path: token
+                  audience: vault
+                  expirationSeconds: 3600
+      containers:
+        - name: tropical-db-migrator
+          env:
+            - name: AUTH_DB_DSN_FILE
+              value: /vault/secrets/auth-db
+            - name: AUDIT_DB_DSN_FILE
+              value: /vault/secrets/audit-db
+            - name: INVENTORY_DB_DSN_FILE
+              value: /vault/secrets/inventory-db
+            - name: SALES_DB_DSN_FILE
+              value: /vault/secrets/sales-db
+            - name: CHAT_DB_DSN_FILE
+              value: /vault/secrets/chat-db
