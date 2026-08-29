@@ -13,12 +13,37 @@ spec:
       labels:
         app: tropical-chat
     spec:
+      terminationGracePeriodSeconds: 30
       serviceAccountName: tropical-management
       containers:
       - name: tropical-chat
         image: harbor-dt.co.id/devops-apps/tropical-chat:v1
         ports:
         - containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /livez
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 24
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 3
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: 8080
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+          successThreshold: 1
 
         env:
         - name: CHAT_DB_DSN

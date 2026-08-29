@@ -14,12 +14,37 @@ spec:
         app: tropical-audit
 
     spec:
+      terminationGracePeriodSeconds: 30
       serviceAccountName: tropical-management
       containers:
       - name: tropical-audit
         image: harbor-dt.co.id/devops-apps/tropical-audit:v1
         ports:
         - containerPort: 8080
+        startupProbe:
+          httpGet:
+            path: /livez
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 24
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 3
+          successThreshold: 1
+        livenessProbe:
+          httpGet:
+            path: /livez
+            port: 8080
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+          successThreshold: 1
         env:
         - name: AUDIT_DB_DSN
           value: tropical:tropical@tcp(192.168.100.70:3306)/tropical_audit?parseTime=true&charset=utf8mb4

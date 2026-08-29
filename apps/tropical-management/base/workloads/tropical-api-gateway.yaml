@@ -14,6 +14,7 @@ spec:
       labels:
         app: tropical-api-gateway
     spec:
+      terminationGracePeriodSeconds: 30
       serviceAccountName: tropical-management
 
       containers:
@@ -40,15 +41,27 @@ spec:
               value: http://tropical-dashboard:8080
             - name: CHAT_SERVICE_URL
               value: http://tropical-chat:8080
+          startupProbe:
+            httpGet:
+              path: /livez
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 24
+            successThreshold: 1
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+            successThreshold: 1
           livenessProbe:
             httpGet:
-              path: /healthz
+              path: /livez
               port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+            successThreshold: 1

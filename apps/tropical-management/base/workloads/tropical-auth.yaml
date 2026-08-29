@@ -13,6 +13,7 @@ spec:
       labels:
         app: tropical-auth
     spec:
+      terminationGracePeriodSeconds: 30
       serviceAccountName: tropical-management
 
       containers:
@@ -20,19 +21,31 @@ spec:
           image: harbor-dt.co.id/devops-apps/tropical-auth:v1
           ports:
             - containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /livez
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 24
+            successThreshold: 1
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+            successThreshold: 1
           livenessProbe:
             httpGet:
-              path: /healthz
+              path: /livez
               port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 20
-            
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+            successThreshold: 1
+
           env:
             - name: AUTH_DB_DSN
               value: tropical:tropical@tcp(192.168.100.70:3306)/tropical_auth?parseTime=true&charset=utf8mb4
