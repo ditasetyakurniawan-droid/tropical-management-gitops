@@ -8,3 +8,4 @@ data:
   INVENTORY_SERVICE_URL: http://tropical-inventory:8080
   SALES_SERVICE_URL: http://tropical-sales:8080
   DASHBOARD_SERVICE_URL: http://tropical-dashboard:8080
+  WORKFORCE_SERVICE_URL: http://tropical-workforce:8080

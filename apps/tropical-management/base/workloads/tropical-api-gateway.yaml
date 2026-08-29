@@ -41,6 +41,8 @@ spec:
               value: http://tropical-dashboard:8080
             - name: CHAT_SERVICE_URL
               value: http://tropical-chat:8080
+            - name: WORKFORCE_SERVICE_URL
+              value: http://tropical-workforce:8080
           startupProbe:
             httpGet:
               path: /livez

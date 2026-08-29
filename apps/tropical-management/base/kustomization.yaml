@@ -10,6 +10,7 @@ resources:
   - workloads/tropical-auth.yaml
   - workloads/tropical-audit.yaml
   - workloads/tropical-inventory.yaml
+  - workloads/tropical-workforce.yaml
   - workloads/tropical-sales.yaml
   - workloads/tropical-dashboard.yaml
   - workloads/tropical-chat.yaml
@@ -23,6 +24,7 @@ resources:
   - services/tropical-auth.yaml
   - services/tropical-audit.yaml
   - services/tropical-inventory.yaml
+  - services/tropical-workforce.yaml
   - services/tropical-sales.yaml
   - services/tropical-dashboard.yaml
   - services/tropical-chat.yaml
