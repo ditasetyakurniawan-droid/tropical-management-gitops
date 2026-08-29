@@ -1,66 +1,106 @@
 # Tropical Management GitOps
 
-Repository ini adalah **source of truth deployment Kubernetes** untuk Tropical Restaurant Management.
+This repository is the Kubernetes deployment source of truth for Tropical Management. Application code belongs in `tropical-management-v1`; deployment state and release orchestration belong here.
 
-## Responsibility split
-
-- `tropical-management-v1`: source code, tests, Dockerfiles, Jenkins pipeline.
-- `tropical-management-gitops`: Kubernetes desired state, Kustomize overlays, Argo CD definitions.
-
-Jenkins membangun dan menguji aplikasi, push immutable image ke Harbor, lalu mengubah image tag di repository ini. Argo CD mendeteksi commit tersebut dan melakukan reconciliation ke cluster.
-
-## Current Application Phase
-
-Phase 3 sudah menambahkan:
-
-- Premium tropical UI system
-- RBAC admin/auditor/staff
-- Internal audit workflow
-- Inventory workflow
-- General Live Chat realtime
-
-Live Chat menggunakan service terpisah:
-
-```
-web -> api-gateway -> chat-service -> MySQL
-```
-
-Fitur:
-
-- shared general room
-- persistent message history
-- Server Sent Events realtime delivery
-- role badge
-- user name accent color
-- JWT based identity validation
-
-Detail development tersedia di:
-
-```
-docs/phase3-live-chat-development-notes.md
-```
-
-## Repository layout
+## Current delivery architecture
 
 ```text
-apps/tropical-management/
-  base/
-  overlays/dev/
-  overlays/prod/
-argocd/
-docs/
+Application GitHub main
+        |
+        v
+      Jenkins
+        |
+        +--> tests / Sonar
+        +--> Harbor immutable images
+        `--> GitOps image tag update
+                    |
+                    v
+                  Argo CD
+                    |
+                    +--> PreSync tropical-db-migrator
+                    |        `--> Vault -> MySQL
+                    |
+                    `--> Kubernetes Deployments
 ```
 
-## Security rules
+Normal application releases are automatic. Jenkins changes desired image tags; Argo CD reconciles them. A database migration failure stops the sync before new application pods roll out.
 
-Repository ini tidak boleh berisi password, Vault token, database credential, kubeconfig, private key, Harbor credential, atau Kubernetes Secret plaintext.
+## Repository responsibilities
 
-Secret runtime berasal dari HashiCorp Vault.
+- Kubernetes Deployments and Services
+- Kustomize base/overlays
+- Vault Agent injection configuration
+- Argo CD Application definitions
+- migration PreSync hook
+- environment-specific desired image tags
+- platform deployment runbooks
 
-## Next Deployment Phase
+This repository must not contain database passwords, Vault tokens, kubeconfig, private keys, Harbor credentials, or plaintext application Secrets.
 
-- Add chat-service Kubernetes workload
-- Add Vault Agent injection
-- Add Harbor image promotion flow
-- Enable Argo CD automated sync after validation
-- Add HPA/PDB/NetworkPolicy
+## Runtime environment
+
+```text
+Kubernetes control plane  192.168.100.51-.53
+Kubernetes workers        192.168.100.54-.56
+Jenkins                   192.168.100.57
+Harbor                    192.168.100.58
+SonarQube + ELK           192.168.100.59
+MySQL DB host             192.168.100.70
+Application namespace     test-app
+Registry                  harbor-dt.co.id/devops-apps
+```
+
+The DB host currently runs MySQL 8.0 in Docker plus mysqld-exporter and phpMyAdmin. This is production-like homelab infrastructure, not a guarantee of database HA.
+
+## Current application workloads
+
+- `tropical-api-gateway`
+- `tropical-audit`
+- `tropical-auth`
+- `tropical-chat`
+- `tropical-dashboard`
+- `tropical-inventory`
+- `tropical-sales`
+- `tropical-web`
+- `tropical-db-migrator` as an Argo CD PreSync Job
+
+## Health/lifecycle policy
+
+Go backend Deployments use:
+
+```text
+startupProbe    /livez
+readinessProbe  /readyz
+livenessProbe   /livez
+terminationGracePeriodSeconds: 30
+```
+
+DB-backed readiness depends on MySQL. Liveness does not.
+
+## Database migration policy
+
+`tropical-db-migrator` runs as `argocd.argoproj.io/hook: PreSync` with `restartPolicy: Never`. Vault Agent uses pre-populate-only mode so secret files exist before the Job starts and the Job can terminate normally.
+
+Migration target ownership:
+
+```text
+auth       tropical_auth
+audit      tropical_audit
+inventory  tropical_inventory
+sales      tropical_sales
+chat       tropical_chat
+```
+
+See [`docs/delivery-flow.md`](docs/delivery-flow.md) and [`docs/operations-runbook.md`](docs/operations-runbook.md).
+
+## Current status
+
+- Vault runtime injection: **implemented**.
+- Harbor immutable image delivery: **implemented**.
+- Argo CD automated application sync: **implemented**.
+- production-like health probes/graceful shutdown: **implemented**.
+- PreSync versioned DB migration: **implemented and E2E validated**.
+- resources/PDB/NetworkPolicy/least-privilege hardening: **next**.
+- ELK application integration/central observability: **not yet complete**.
+
+See [`docs/next-steps.md`](docs/next-steps.md).
